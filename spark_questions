@@ -1,0 +1,30 @@
+
+how do you increase the chance of coming it into the node local?
+spark.locality.wait
+when you have large running process you can add spark.locality.wait so that shuffling thelarge amount of data requirement over the network is reduced and it tries to process data at same process  ,or nodes  or rack level and save, if the process are short running ones decrease the locality the wait time so that they get processed anywhere as it's just small piece of data that needs to go. default values is 3 seconds.
+
+
+vesterization
+https://stackoverflow.com/questions/41124428/spark-yarn-cluster-vs-client-how-to-choose-which-one-to-use#:~:text=In%20cluster%20mode,%20the%20Spark%20driver%20runs%20inside,is%20only%20used%20for%20requesting%20resources%20from%20YARN.
+Different modes of deployment , in which scenario what to use. ?cluster mode deployment vs client deployment : spark submit 
+client requirement -> cluster mode 1) network lag is less  client mode)diffrence
+if your hadoop cluster and client sits on the same network go with the client mode , will get to use the extra driver from the system as well
+or if cluster is at far away network then I will run it in cluster mode or rsync the jar to the remote cluster and submit it there in client or cluster mode depending on how heavy the program is on resource
+AFAIK With the driver program running in the cluster, it is less vulnerable to remote disconnects crashing the driver and the entire spark job.This is especially useful for long running jobs such as stream processing type workloads.
+Spark supports two modes for running on YARN, “yarn-cluster” mode and “yarn-client” mode. Broadly, yarn-cluster mode makes sense for production jobs, while yarn-client mode makes sense for interactive and debugging uses where you want to see your application’s output immediately.
+cluster mode driver runs in application master and client mode driver runs in Client.
+in both application master requests the resources and yarn node manager starts the executor processes
+how do you get cluster 
+what are diffrences
+
+2 large datasets with skew : use bucketing in spark how to do that in spark?
+bucketby 
+PARTITIONED BY (favorite_color)
+CLUSTERED BY(name) SORTED BY (favorite_numbers) INTO 42 BUCKETS;
+sampling 
+real example:
+data null where remove  space
+first word 
+
+reduce by key vs group by key  by diffrence?
+repartition vs coalesce
