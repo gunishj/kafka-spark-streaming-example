@@ -27,4 +27,17 @@ data null where remove  space
 first word 
 
 reduce by key vs group by key  by diffrence?
-repartition vs coalesce
+repartition vs coalesce : repartitions makes equal partitions but doesn't tries to avoid shuffle, whereas coalesce joins and try not to do shuffle so it's lighter operation.
+Keep in mind that repartitioning your data is a fairly expensive operation. Spark also has an optimized version of repartition() called coalesce() that allows avoiding data movement, but only if you are decreasing the number of RDD partitions.
+t avoids a full shuffle. If it's known that the number is decreasing then the executor can safely keep data on the minimum number of partitions, only moving the data off the extra nodes, onto the nodes that we kept.
+
+So, it would go something like this:
+
+Node 1 = 1,2,3
+Node 2 = 4,5,6
+Node 3 = 7,8,9
+Node 4 = 10,11,12
+Then coalesce down to 2 partitions:
+
+Node 1 = 1,2,3 + (10,11,12)
+Node 3 = 7,8,9 + (4,5,6)
